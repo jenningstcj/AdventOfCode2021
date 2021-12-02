@@ -60,7 +60,7 @@ const lastPosition = commands.reduce(move, position);
 console.log(
   `Part 1 Result: XPos: ${lastPosition.XPos} YPos: ${
     lastPosition.YPos
-  }  Multipled: ${lastPosition.XPos * lastPosition.YPos}`
+  }  Multiplied: ${lastPosition.XPos * lastPosition.YPos}`
 );
 
 /*
@@ -122,7 +122,7 @@ const lastPosition2 = commands.reduce(movePart2, position2);
 console.log(
   `Part 2 Result: XPos: ${lastPosition2.XPos} YPos: ${
     lastPosition2.YPos
-  }  Multipled: ${lastPosition2.XPos * lastPosition2.YPos}`
+  }  Multiplied: ${lastPosition2.XPos * lastPosition2.YPos}`
 );
 
 //run with:  npx ts-node ./Days/02/02.ts

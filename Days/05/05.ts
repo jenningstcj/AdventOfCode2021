@@ -42,20 +42,10 @@ Consider only horizontal and vertical lines. At how many points do at least two 
 */
 
 import { input } from "./input";
-
-const testInput = `0,9 -> 5,9
-8,0 -> 0,8
-9,4 -> 3,4
-2,2 -> 2,1
-7,0 -> 7,4
-6,4 -> 2,0
-0,9 -> 2,9
-3,4 -> 1,4
-0,0 -> 8,8
-5,5 -> 8,2`;
+import {filter} from "../../helpers/hashMap"
 
 type Coordinate = { x: number; y: number };
-type CoordinateWithCount = { x: number; y: number; times: number };
+
 type Segment = {
   coordinate1: Coordinate;
   coordinate2: Coordinate;
@@ -89,7 +79,7 @@ const getSpacesPopulatedBySegment = (segment: Segment): Coordinate[] => {
   return spots;
 };
 
-const formatedInput = input
+const dataMap = input
   .split(/\r?\n/)
   .map(
     (line) =>
@@ -108,29 +98,16 @@ const formatedInput = input
   .filter((segment) => isHorizontal(segment) || isVertical(segment))
   .map((segment) => getSpacesPopulatedBySegment(segment))
   .reduce((acc, val) => acc.concat(...val), [])
-  .reduce((acc, val, index, originalArray) => {
-    const instance = acc.find((point) => point.x == val.x && point.y == val.y);
-    if (instance) {
-      return acc;
-    } else {
-      if (
-        originalArray.filter((point) => point.x == val.x && point.y == val.y)
-          .length > 1
-      ) {
-        return acc.concat({
-          ...val,
-          times: originalArray.filter(
-            (point) => point.x == val.x && point.y == val.y
-          ).length,
-        });
-      } else {
-        return acc;
-      }
-    }
-  }, [] as CoordinateWithCount[]);
+  .reduce((acc, val, index, original) => {
+    const key = `${val.x.toString().trim()}-${val.y.toString().trim()}`;
+    const instance:number = acc.get(key) ?? 1
+    return acc.set(key, instance + 1)
+  }, new Map());
+  
 
 //@ts-ignore
-console.log(formatedInput.filter((x) => x.times >= 2).length);
+console.log('[part 1 answer]', new Map([...dataMap].filter(([key,value]) => value > 2)).size);
+//6225
 
 /*
 PART TWO
@@ -175,38 +152,17 @@ const formatedInput2 = input
         spaces: [],
       } as Segment)
   )
-  .reduce((acc, val: Segment, index, original) => {
-    const newPoints = getSpacesPopulatedBySegment(val);
-    for (var i = 0; i < newPoints.length; i++) {
-      const instance = acc.find(
-        (point) => point.x == newPoints[i].x && point.y == newPoints[i].y
-      );
-      if (instance) {
-        acc = [
-          ...acc.filter(
-            (point) => point.x == newPoints[i].x && point.y == newPoints[i].y
-          ),
-          {
-            ...newPoints[i],
-            times:
-              acc.filter(
-                (point) =>
-                  point.x == newPoints[i].x && point.y == newPoints[i].y
-              ).length + 1,
-          },
-        ];
-      } else {
-        acc = acc.concat({
-          ...newPoints[i],
-          times: 1,
-        });
-      }
-    }
+  .map((segment) => getSpacesPopulatedBySegment(segment))
+  .reduce((acc, val) => acc.concat(...val), [])
+  .reduce((acc, val, index, original) => {
+    const key = `${val.x.toString().trim()}-${val.y.toString().trim()}`;
+    const instance:number = acc.get(key) ?? 1
+    return acc.set(key, instance + 1)
+  }, new Map());
 
-    return acc;
-  }, [] as CoordinateWithCount[]);
+
 
 //@ts-ignore
-console.log(formatedInput2.filter((x) => x.times >= 2).length);
+console.log('[part 2 answer]', filter<string, number>(formatedInput2, <string, number>([key,value]) => value > 2).size);
 
 //run with:  npx ts-node ./Days/05/05.ts

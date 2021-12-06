@@ -51,3 +51,56 @@ In this example, after 18 days, there are a total of 26 fish. After 80 days, the
 
 Find a way to simulate lanternfish. How many lanternfish would there be after 80 days?
 */
+
+import { range } from "../../helpers/array-helpers/range";
+import { input } from "./input";
+
+//previous way for part 1, but results in a stack overflow for part two.  keeping for interesting note about speed of push vs concat
+// const calculateFish = (days: number) =>
+//   range(1, days).reduce(
+//     (fish, day) => {
+//       return fish.reduce((acc, f) => {
+//         f === 0 ? acc.push(...[6, 8]) : acc.push(f - 1); //push is 945x faster than concat.
+//         return acc;
+//       }, [] as number[]);
+//     },
+//     testInput.split(",").map((x) => parseInt(x, 10))
+//   );
+
+const createMap = (nums: number[]): Map<number, number> =>
+  nums.reduce((acc, val) => {
+    const key = parseInt(`${val}`, 10);
+    const instance: number = acc.get(key) ?? 0;
+    return acc.set(key, instance + 1);
+  }, new Map());
+
+const calculateFish = (days: number) =>
+  range(1, days).reduce((fish, day) => {
+    range(0, 8).map((d) => {
+      fish.set(d - 1, fish.get(d) ?? 0);
+    });
+    fish.delete(8);
+
+    const producingNewOffspring = fish.get(-1);
+    if (producingNewOffspring) {
+      fish.set(6, producingNewOffspring + (fish.get(6) ?? 0));
+      fish.set(8, producingNewOffspring);
+      fish.delete(-1);
+    }
+    return fish;
+  }, createMap(input.split(",").map((x) => parseInt(x, 10))));
+
+const answer1 = [...calculateFish(80)]
+  .map(([k, v]) => v)
+  .reduce((acc, val) => acc + val, 0);
+//@ts-ignore
+console.log("PART ONE", answer1);
+
+const answer2 = [...calculateFish(256)]
+  .map(([k, v]) => v)
+  .reduce((acc, val) => acc + val, 0);
+
+//@ts-ignore
+console.log("PART TWO", answer2);
+
+//run with:  npx ts-node ./Days/06/06.ts

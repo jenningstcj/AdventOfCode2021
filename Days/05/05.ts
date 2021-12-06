@@ -107,7 +107,7 @@ const dataMap = input
 
 //@ts-ignore
 console.log('[part 1 answer]', new Map([...dataMap].filter(([key,value]) => value > 2)).size);
-//6225
+
 
 /*
 PART TWO
@@ -154,7 +154,7 @@ const formatedInput2 = input
   )
   .map((segment) => getSpacesPopulatedBySegment(segment))
   .reduce((acc, val) => acc.concat(...val), [])
-  .reduce((acc, val, index, original) => {
+  .reduce((acc, val) => {
     const key = `${val.x.toString().trim()}-${val.y.toString().trim()}`;
     const instance:number = acc.get(key) ?? 1
     return acc.set(key, instance + 1)

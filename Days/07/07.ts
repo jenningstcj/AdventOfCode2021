@@ -34,7 +34,7 @@ This costs a total of 37 fuel. This is the cheapest possible outcome; more expen
 Determine the horizontal position that the crabs can align to using the least fuel possible. How much fuel must they spend to align to that position?
 */
 
-import { findMedian, makePositive } from "../../helpers/arithmetic";
+import { findHighestNumber, findLowestNumber, findMedian, makePositive } from "../../helpers/arithmetic";
 import { range } from "../../helpers/array-helpers/range";
 import { Ascending } from "../../helpers/array-helpers/sort";
 import { input } from "./input";
@@ -80,14 +80,9 @@ Determine the horizontal position that the crabs can align to using the least fu
 
 const positions = input.split(`,`).map((p) => Number(p));
 const numPositions = positions.length;
-const minPos = positions.reduce(
-  (prev, curr) => Math.min(prev, curr),
-  Number.MAX_VALUE
-);
-const maxPos = positions.reduce(
-  (prev, curr) => Math.max(prev, curr),
-  Number.MIN_VALUE
-);
+const minPos = findLowestNumber(positions);
+
+const maxPos = findHighestNumber(positions);
 
 let minUsed = Number.MAX_VALUE;
 

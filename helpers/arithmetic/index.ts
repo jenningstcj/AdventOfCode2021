@@ -3,7 +3,7 @@ import { Ascending } from "../array-helpers/sort";
 import { sum } from "./sum";
 
 export const findMean = (numbers: number[]): number => {
-  return Math.round((sum(numbers) / numbers.length));
+  return Math.round(sum(numbers) / numbers.length);
 };
 
 export const findMedian = (numbers: number[]): number => {
@@ -16,3 +16,9 @@ export const findMedian = (numbers: number[]): number => {
 };
 
 export const makePositive = (num: number): number => (num < 0 ? -num : num);
+
+export const findLowestNumber = (numbers: number[]) =>
+  numbers.reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
+
+export const findHighestNumber = (numbers: number[]) =>
+  numbers.reduce((prev, curr) => Math.max(prev, curr), Number.MIN_VALUE);
